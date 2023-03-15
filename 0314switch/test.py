@@ -40,7 +40,7 @@
 #     if i == "m":
 #         break
 #         print(i)
-
-n=eval(input())
-for i in range(1,n,2):
-    print("*" * i)
+#
+# n=eval(input())
+# for i in range(1,n+1,2):
+#     print("*" * i)
