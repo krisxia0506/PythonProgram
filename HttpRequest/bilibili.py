@@ -2,6 +2,7 @@ import requests
 import re
 import os
 
+
 def save_html(url):
     '''
     url:对应视频的url链接
@@ -28,20 +29,23 @@ def handel_data(file, start=1, end=-1):
 
     # 得到page part duration 对应选集集数 选集名字 选集时长(second)
     pages = re.findall(
-        r'{"cid":.*?,"page":(.*?),"from":"vupload","part":(.*?),"duration":(\d*),"vid":.*?,"weblink":.*?,"dimension":.*?}', pageList[0])
+        r'{"cid":.*?,"page":(.*?),"from":"vupload","part":(.*?),"duration":(\d*),"vid":.*?,"weblink":.*?,"dimension":.*?}',
+        pageList[0])
     if end == -1:
-        total_seconds = sum(int(page[-1]) for page in pages[start-1:])
+        total_seconds = sum(int(page[-1]) for page in pages[start - 1:])
     else:
-        total_seconds = sum(int(page[-1]) for page in pages[start-1:end])
+        total_seconds = sum(int(page[-1]) for page in pages[start - 1:end])
     hour = int(total_seconds / 60 / 60)
     minute = int((total_seconds - hour * 60 * 60) / 60)
     second = total_seconds - hour * 60 * 60 - minute * 60
     print('选集总时长为:{:02d}:{:02d}:{:02d}'.format(hour, minute, second))
 
+
 def main():
     while True:
         # bv = input("请输入视频BV号: ")
-        bv = "BV1Ya411S7aT"
+        # bv = "BV1Ya411S7aT" # ssm
+        bv = "BV1tL411c7gi"  # 软考
         while True:
             try:
                 start = int(input("输入视频起始集: "))
@@ -72,6 +76,7 @@ def main():
                 print("Bye~")
                 return
             break
+
 
 if __name__ == "__main__":
     main()
