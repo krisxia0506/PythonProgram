@@ -7,7 +7,7 @@ while True:
         dict["disagree"] += 1
     elif a == "-1":
         break
-if dict["agree"] > dict["disagree"]:
+if dict["agree"] >= dict["disagree"]:
     print("Yes")
 elif dict["agree"] < dict["disagree"]:
     print("No")

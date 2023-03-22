@@ -44,8 +44,8 @@ def handel_data(file, start=1, end=-1):
 def main():
     while True:
         # bv = input("请输入视频BV号: ")
-        # bv = "BV1Ya411S7aT" # ssm
-        bv = "BV1tL411c7gi"  # 软考
+        bv = "BV1Ya411S7aT" # ssm
+        # bv = "BV1tL411c7gi"  # 软考
         while True:
             try:
                 start = int(input("输入视频起始集: "))

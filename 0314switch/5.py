@@ -1,5 +1,5 @@
 n = input()
-dict= {}
+dict = {}
 for i in range(int(n)):
     a = input()
     if a == "Q":
@@ -9,9 +9,6 @@ for i in range(int(n)):
         else:
             print(dict[b])
     elif a == "A":
-        name,num = input().split()
+        name, num = input().split()
         if name not in dict.keys():
             dict[name] = int(num)
-
-
-

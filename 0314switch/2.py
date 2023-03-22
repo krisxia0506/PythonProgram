@@ -8,7 +8,9 @@ for i in range(n):
 m = int(input())
 for j in range(m):
     name, num = input().split(" ")
-    dic[name] = dic.get(name, 0) + int(num)
-
+    if name in dic.keys():
+        dic[name] += int(num)
+    else:
+        dic[name] = int(num)
 select_goods = input()
 print(dic[select_goods])
