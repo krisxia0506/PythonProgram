@@ -9,9 +9,15 @@ def escape(s, t):
 
 
 t = ''  # 初始化字符串t为空字符串
-for i in range(3):  # 循环3次
-    line = input()  # 获取一行输入
-    t += line + '\n'  # 将输入的行添加到t中，并加上换行符
+# while True:
+#     line = input()  # 获取一行输入
+#     if line == '':  # 如果输入为空行
+#         break
+#     else:
+#         t += line + '\n'  # 将输入的行添加到t中，并加上换行符
+#
+for i in range(2):
+    t += input() + '\n'  # 将输入的行添加到t中，并加上换行符
 
 s = ''  # 初始化字符串s为空字符串
 s = escape(s, t)  # 将t拷贝到s中，并进行换码序列转换
