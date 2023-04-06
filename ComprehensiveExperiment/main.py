@@ -9,7 +9,10 @@ from urllib.parse import urljoin
 from urllib.request import urlopen
 from multiprocessing import Pool
 
+import pymysql
 from bs4 import BeautifulSoup
+
+from ComprehensiveExperiment.testMysql import Mysql
 
 # 获取页面内容
 url = r'https://cstd.ncist.edu.cn/szdw/index.htm'
@@ -117,10 +120,12 @@ def personalPageInformation(personalPageUrl):
         else:
             init_data[key] = ''
     print(init_data)
+    saveToDB(init_data)
+
 
 # 数据库操作
 def saveToDB(init_data):
-    pass
+    Mysql.saveToDB(init_data)
 
 if __name__ == '__main__':
     createPersonalFolder(result)
