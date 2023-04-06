@@ -51,7 +51,7 @@ def crawlEveryUrl(item):
 
 # 爬取图片
 def crawlPicture(personalPageUrl, name):
-    name_folder = os.path.join("NCIST", name)
+    name_folder = os.path.join("NCIST", name,name)
     try:
         # 打开个人页面
         with urlopen(personalPageUrl) as fp:
@@ -68,7 +68,7 @@ def crawlPicture(personalPageUrl, name):
         print(imgUrls)
         try:
             with urlopen(imgUrl) as fpl:
-                with open(name_folder + name + '.jpg', 'wb') as fp2:
+                with open(name_folder  + '.jpg', 'wb') as fp2:
                     fp2.write(fpl.read())
         except:
             pass
