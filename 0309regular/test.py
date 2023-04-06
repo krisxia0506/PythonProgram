@@ -2,7 +2,7 @@
 # print(list(map(formatter,['morning'])))
 # print('asd%s'%[1,2,3])
 # print('asd[1,2,3]')
-# print('test.py'.endswith(('.py','.pyw')))
+# print('jd.py'.endswith(('.py','.pyw')))
 import re
 
 # print(''.join(re.split('[sd]','asdssfff')))
