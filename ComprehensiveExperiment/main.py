@@ -9,7 +9,6 @@ from urllib.parse import urljoin
 from urllib.request import urlopen
 from multiprocessing import Pool
 
-import pymysql
 from bs4 import BeautifulSoup
 
 from ComprehensiveExperiment.testMysql import Mysql
@@ -51,7 +50,7 @@ def crawlEveryUrl(item):
 
 # 爬取图片
 def crawlPicture(personalPageUrl, name):
-    name_folder = os.path.join("NCIST", name,name)
+    name_folder = os.path.join("NCIST", name, name)
     try:
         # 打开个人页面
         with urlopen(personalPageUrl) as fp:
@@ -68,7 +67,7 @@ def crawlPicture(personalPageUrl, name):
         print(imgUrls)
         try:
             with urlopen(imgUrl) as fpl:
-                with open(name_folder  + '.jpg', 'wb') as fp2:
+                with open(name_folder + '.jpg', 'wb') as fp2:
                     fp2.write(fpl.read())
         except:
             pass
@@ -126,6 +125,7 @@ def personalPageInformation(personalPageUrl):
 # 数据库操作
 def saveToDB(init_data):
     Mysql.saveToDB(init_data)
+
 
 if __name__ == '__main__':
     createPersonalFolder(result)
