@@ -17,6 +17,7 @@ from multiprocessing import Pool
 
 from bs4 import BeautifulSoup
 
+from ComprehensiveExperiment.PersonalPageInformation import getPersonalUrlContent, getPersonalPageInformation
 from ComprehensiveExperiment.testMysql import Mysql
 
 # 获取页面内容
@@ -32,13 +33,13 @@ print("网页中匹配到的所有老师姓名" + str(result))
 
 
 # 为每个老师创建文件夹
-def createPersonalFolder(result):
+def createPersonalFolder(teacher_list):
     current_path = os.getcwd()
     ncist_folder_path = 'NCIST'
     if not os.path.isdir(ncist_folder_path):
         os.mkdir(ncist_folder_path)
     # 创建每个人的文件夹
-    for i in result:
+    for i in teacher_list:
         name = i[1]
         # 判断NCIST文件夹下是否有name文件夹
         # 如果没有就创建
@@ -84,52 +85,12 @@ def crawlPicture(personalPageUrl, name):
 
 
 # 对个人页面进行信息提取
-def personalPageInformation(personalPageUrl):
+def personalPageInformation(personal_page_url):
     # 获取页面内容
-    with urlopen(personalPageUrl) as fp:
-        html = fp.read().decode()
-
-    # 使用BeautifulSoup解析页面
-    soup = BeautifulSoup(html, 'html.parser')
-
-    # 提取页面中的纯文本
-    text = soup.get_text() \
-        .replace(' ', '') \
-        .replace(' ', '')
-
-    # 输出纯文本
-    # print(text)
-    # 正则表达式字典
-    patter = {
-        'name': r'姓名\n(.*?)\n\n',
-        'title': r'职称\n(.*?)\n\n',
-        'degree': r'学位\n(.*?)\n\n',
-        'research_interests': r'研究方向\n(.*?)\n\n',
-        'department': r'所在系教研室\n(.*?)\n\n',
-        'email': r'邮箱\n(.*?)\n\n',
-        'education': r'教育背景\n(.*?)\n\n',
-        'bio': r'个人简介\n(.*?)\n\n',
-    }
-    # 初始化字典
-    init_data = {
-        'name': '',
-        'title': '',
-        'degree': '',
-        'research_interests': '',
-        'department': '',
-        'email': '',
-        'education': '',
-        'bio': ''
-    }
-    # 正则表达式匹配
-    for key in patter:
-        findall = re.findall(patter[key], text)
-        if findall:
-            init_data[key] = findall[0]
-        else:
-            init_data[key] = ''
-    print(init_data)
-    saveToDB(init_data)
+    content = getPersonalUrlContent(personal_page_url)
+    information = getPersonalPageInformation(content)
+    print(information)
+    saveToDB(information)
 
 
 # 数据库操作,保存到数据库
