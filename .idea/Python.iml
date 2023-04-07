@@ -1,7 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/丁智斌" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/万雪芬" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/乔良" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/兰芸" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/刘明艳" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/刘春梅" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/吴晓丹" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/吴静" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/夏庆新" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/姜延丰" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/孙改平" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/崔新伟" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/张云雷" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/张玮" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/徐花芬" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/曹德胜（系主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/曾卉（中心主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/朱冬梅" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/李冬艳（系主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/李永飞（系主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/李芙玲" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/杜杏菁" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/杨月江" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/杨阳" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/栾尚敏" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王养廷（系主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王博玲" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王德志（教研室主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王慧" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王晓菊" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王爱敏" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/王贺祥" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/白磊" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/程刚" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/胡英" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/范玉涛" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/谢剑飞" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/赵巧芳" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/郭书英" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/郭慧" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/郭晓欣" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/金学怀" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/闫文忠" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/陆美琳" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/陈振国（系主任）" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/陈超" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/黄江兰" />
+      <excludeFolder url="file://$MODULE_DIR$/HttpRequest/.idea/dataSources" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
