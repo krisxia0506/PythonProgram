@@ -1,5 +1,11 @@
-# 自定网站，对图片和文字的爬取
-# 正则表达式和文件操作
+"""
+    该项目的目的是爬取网页中的所有老师的个人信息
+    包括：照片、姓名、职称、学位、研究方向、所在系教研室、邮箱、教育背景、个人简介
+    使用的技术：正则表达式、BeautifulSoup、多进程、数据库操作、文件操作、异常处理、面向对象编程、多python文件编程
+    1.爬取网页中的所有老师姓名和个人页面的url，作为元组存储在列表中
+    2.为每个老师创建文件夹
+    3.爬取每个老师的个人页面的照片和个人信息
+"""
 from __future__ import unicode_literals
 
 import os
@@ -16,7 +22,9 @@ from ComprehensiveExperiment.testMysql import Mysql
 # 获取页面内容
 url = r'https://cstd.ncist.edu.cn/szdw/index.htm'
 with urlopen(url) as fp:
-    content = fp.read().decode()
+    content = fp.read()
+    content = content.decode()
+
 # 正则表达式
 pattern = r'''<a href='(.+?)' .*?>(.+?)</a>'''
 result = re.findall(pattern, content)
@@ -85,7 +93,9 @@ def personalPageInformation(personalPageUrl):
     soup = BeautifulSoup(html, 'html.parser')
 
     # 提取页面中的纯文本
-    text = soup.get_text().replace(' ', '').replace(' ', '')
+    text = soup.get_text() \
+        .replace(' ', '') \
+        .replace(' ', '')
 
     # 输出纯文本
     # print(text)
@@ -122,12 +132,20 @@ def personalPageInformation(personalPageUrl):
     saveToDB(init_data)
 
 
-# 数据库操作
+# 数据库操作,保存到数据库
+# 面向对象
 def saveToDB(init_data):
-    Mysql.saveToDB(init_data)
+    mysql = Mysql(
+        '127.0.0.1',
+        'root',
+        'mysql',
+        'ncist'
+    )
+    mysql.saveToDB(init_data)
 
 
 if __name__ == '__main__':
+    # 创建文件夹
     createPersonalFolder(result)
     with Pool(10) as p:
         p.map(crawlEveryUrl, result)

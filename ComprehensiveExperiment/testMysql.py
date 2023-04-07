@@ -1,11 +1,17 @@
 import pymysql
 
 class Mysql:
-    def saveToDB(init_data):
-        host = '127.0.0.1'
-        username = 'root'
-        password = 'mysql'
-        database = 'ncist'
+    def __init__(self,host,username,password,database):
+        self.host = host
+        self.username = username
+        self.password = password
+        self.database = database
+
+    def saveToDB(self,init_data):
+        host = self.host
+        username = self.username
+        password = self.password
+        database = self.database
         # 连接到数据库
         conn = pymysql.connect(host=host, user=username, password=password, database=database)
         # 创建游标
