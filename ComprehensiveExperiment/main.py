@@ -48,12 +48,14 @@ def createPersonalFolder(teacher_list):
             os.mkdir(everyone_folder_path)
 
 
-# 爬取每个老师的个人页面
+# 爬取每个老师的个人页面，入口
 def crawlEveryUrl(item):
     personalPageUrl, name = item
     personalPageUrl = urljoin(url, personalPageUrl)
     print(name + "的个人页面：" + personalPageUrl)
+    # 抓取图片
     crawlPicture(personalPageUrl, name)
+    # 抓取个人信息
     personalPageInformation(personalPageUrl)
 
 
@@ -67,13 +69,36 @@ def crawlPicture(personalPageUrl, name):
     except:
         print('出错了一秒钟后自动重试…')
         sleep(1)
+        crawlPicture(personalPageUrl, name)
         return
     # 正则表达式匹配图片
-    img_pattern = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.jpg)"[^>]*>'
-    imgUrls = re.findall(img_pattern, content)
-    if imgUrls:
-        imgUrl = urljoin(url, imgUrls[0])
-        print(imgUrls)
+    img_pattern1 = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.jpg)"[^>]*>'
+    img_pattern2 = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.png)"[^>]*>'
+    img_pattern3 = r'<img[^>]*src="(../../images/2022-04/[^"]+\.jpg)"[^>]*>'
+    imgUrls1 = re.findall(img_pattern1, content)
+    imgUrls2 = re.findall(img_pattern2, content)
+    imgUrls3 = re.findall(img_pattern3, content)
+    if imgUrls1:
+        imgUrl = urljoin(url, imgUrls1[0])
+        print(imgUrls1)
+        try:
+            with urlopen(imgUrl) as fpl:
+                with open(name_folder + '.jpg', 'wb') as fp2:
+                    fp2.write(fpl.read())
+        except:
+            pass
+    elif imgUrls2:
+        imgUrl = urljoin(url, imgUrls2[0])
+        print(imgUrls2)
+        try:
+            with urlopen(imgUrl) as fpl:
+                with open(name_folder + '.png', 'wb') as fp2:
+                    fp2.write(fpl.read())
+        except:
+            pass
+    elif imgUrls3:
+        imgUrl = urljoin(url, imgUrls3[0])
+        print(imgUrls3)
         try:
             with urlopen(imgUrl) as fpl:
                 with open(name_folder + '.jpg', 'wb') as fp2:
@@ -85,6 +110,7 @@ def crawlPicture(personalPageUrl, name):
 
 
 # 对个人页面进行信息提取
+# 多python文件编程
 def personalPageInformation(personal_page_url):
     # 获取页面内容
     content = getPersonalUrlContent(personal_page_url)
