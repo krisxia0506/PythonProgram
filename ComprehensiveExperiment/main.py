@@ -15,10 +15,9 @@ from urllib.parse import urljoin
 from urllib.request import urlopen
 from multiprocessing import Pool
 
-from bs4 import BeautifulSoup
 
-from ComprehensiveExperiment.PersonalPageInformation import getPersonalUrlContent, getPersonalPageInformation
-from ComprehensiveExperiment.testMysql import Mysql
+from PersonalPageInformation import getPersonalUrlContent, getPersonalPageInformation
+from testMysql import Mysql
 
 # 获取页面内容
 url = r'https://cstd.ncist.edu.cn/szdw/index.htm'
