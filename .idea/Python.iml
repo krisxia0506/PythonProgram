@@ -51,6 +51,7 @@
       <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/陈超" />
       <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST/黄江兰" />
       <excludeFolder url="file://$MODULE_DIR$/HttpRequest/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/ComprehensiveExperiment/NCIST" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

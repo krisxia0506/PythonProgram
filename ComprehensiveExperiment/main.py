@@ -6,7 +6,6 @@
     2.为每个老师创建文件夹
     3.爬取每个老师的个人页面的照片和个人信息
 """
-from __future__ import unicode_literals
 
 import os
 import re
@@ -74,34 +73,37 @@ def crawlPicture(personalPageUrl, name):
     img_pattern1 = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.jpg)"[^>]*>'
     img_pattern2 = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.png)"[^>]*>'
     img_pattern3 = r'<img[^>]*src="(../../images/2022-04/[^"]+\.jpg)"[^>]*>'
-    imgUrls1 = re.findall(img_pattern1, content)
-    imgUrls2 = re.findall(img_pattern2, content)
-    imgUrls3 = re.findall(img_pattern3, content)
-    if imgUrls1:
-        imgUrl = urljoin(url, imgUrls1[0])
-        print(imgUrls1)
+    img_urls1 = re.findall(img_pattern1, content)
+    img_urls2 = re.findall(img_pattern2, content)
+    img_urls3 = re.findall(img_pattern3, content)
+    if img_urls1:
+        imgUrl = urljoin(url, img_urls1[0])
+        print(name+"的个人照片url:"+str(img_urls1))
         try:
             with urlopen(imgUrl) as fpl:
                 with open(name_folder + '.jpg', 'wb') as fp2:
                     fp2.write(fpl.read())
+                    print(name+'图片下载成功')
         except:
             pass
-    elif imgUrls2:
-        imgUrl = urljoin(url, imgUrls2[0])
-        print(imgUrls2)
+    elif img_urls2:
+        imgUrl = urljoin(url, img_urls2[0])
+        print(name+"的个人照片url:"+str(img_urls2))
         try:
             with urlopen(imgUrl) as fpl:
                 with open(name_folder + '.png', 'wb') as fp2:
                     fp2.write(fpl.read())
+                    print(name + '图片下载成功')
         except:
             pass
-    elif imgUrls3:
-        imgUrl = urljoin(url, imgUrls3[0])
-        print(imgUrls3)
+    elif img_urls3:
+        imgUrl = urljoin(url, img_urls3[0])
+        print(name+"的个人照片url:"+str(img_urls3))
         try:
             with urlopen(imgUrl) as fpl:
                 with open(name_folder + '.jpg', 'wb') as fp2:
                     fp2.write(fpl.read())
+                    print(name + '图片下载成功')
         except:
             pass
     else:
@@ -112,8 +114,8 @@ def crawlPicture(personalPageUrl, name):
 # 多python文件编程
 def personalPageInformation(personal_page_url):
     # 获取页面内容
-    content = getPersonalUrlContent(personal_page_url)
-    information = getPersonalPageInformation(content)
+    personal_page_content = getPersonalUrlContent(personal_page_url)
+    information = getPersonalPageInformation(personal_page_content)
     print(information)
     saveToDB(information)
 
