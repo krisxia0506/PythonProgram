@@ -58,16 +58,16 @@ def crawlEveryUrl(item):
 
 
 # 爬取图片
-def crawlPicture(personalPageUrl, name):
+def crawlPicture(personal_page_url, name):
     name_folder = os.path.join("NCIST", name, name)
     try:
         # 打开个人页面
-        with urlopen(personalPageUrl) as fp:
+        with urlopen(personal_page_url) as fp:
             content = fp.read().decode()
     except:
         print('出错了一秒钟后自动重试…')
         sleep(1)
-        crawlPicture(personalPageUrl, name)
+        crawlPicture(personal_page_url, name)
         return
     # 正则表达式匹配图片
     img_pattern1 = r'<img[^>]*src="(/pub/jsjxy/images/[^"]+\.jpg)"[^>]*>'
