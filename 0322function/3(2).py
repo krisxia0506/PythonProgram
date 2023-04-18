@@ -1,7 +1,7 @@
 import sys
 
 input_str = sys.stdin.read()
-replaceOne = a.replace("\n", "\\n")
-replaceTwo = b.replace("\t", "\\t")
+replaceOne = input_str.replace("\n", "\\n")
+replaceTwo = input_str.replace("\t", "\\t")
 
 print(replaceTwo)

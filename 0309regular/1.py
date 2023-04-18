@@ -1,5 +1,3 @@
-import re
-
 words = input()
 words = words.split()
 words = [x.lower() for x in words]

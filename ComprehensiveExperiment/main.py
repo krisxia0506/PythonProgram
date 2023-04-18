@@ -46,7 +46,7 @@ def createPersonalFolder(teacher_list):
             os.mkdir(everyone_folder_path)
 
 
-# 爬取每个老师的个人页面，入口
+# 爬取每个老师的个人页面，程序入口
 def crawlEveryUrl(item):
     personalPageUrl, name = item
     personalPageUrl = urljoin(url, personalPageUrl)
@@ -115,6 +115,7 @@ def crawlPicture(personalPageUrl, name):
 def personalPageInformation(personal_page_url):
     # 获取页面内容
     personal_page_content = getPersonalUrlContent(personal_page_url)
+    # 根据页面内容提取个人信息
     information = getPersonalPageInformation(personal_page_content)
     print(information)
     saveToDB(information)
@@ -135,5 +136,6 @@ def saveToDB(init_data):
 if __name__ == '__main__':
     # 创建文件夹
     createPersonalFolder(result)
+    # 多进程
     with Pool(10) as p:
         p.map(crawlEveryUrl, result)

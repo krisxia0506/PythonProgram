@@ -1,5 +1,5 @@
 import re
 
-a = "DataBaseUser"
+a = input()
 
 print((re.sub(r"(?<!^)(?=[A-Z])", r"_", a).lower()))

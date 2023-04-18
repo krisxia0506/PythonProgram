@@ -22,7 +22,7 @@ def getPersonalPageInformation(content):
     text = soup.get_text().replace(' ', '').replace(' ', '')
 
     # 输出纯文本
-    # print(text)
+    print(text)
     # 正则表达式
 
     # patter = r'姓名\n(.*?)\n'
