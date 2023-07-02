@@ -2,11 +2,11 @@
 
 
 import requests
-# uid = 153161138
+uid = 153161138
 # uid = 192230306
-uid = 237274183
+# uid = 237274183
 while 1:
-
+    
     url = 'https://office.chaoxing.com/front/open/share/apps/forms/fore/events/requesturl?url=https%3A%2F%2Fhbkj.qmx' \
           f'.chaoxing.com%2Fpedestal%2Fapis%2Fcommon%2FgetStudentInfo%3Ffid%3D206208%26uid%3D{uid}&response=%5B%7B' \
           '%22compt%22%3A%22editinput%22%2C%22jpath%22%3A%22%24.xh%22%2C%22pcid%22%3A0%2C%22label%22%3A%22%E5%AD%A6%E5%8F' \
@@ -30,6 +30,7 @@ while 1:
     nameurl = f'https://learn.chaoxing.com/apis/friend/getFriendsReadRank?tid=107798320&puid={uid}&eStatBy=day&rankType=friends&page=1&pageSize=5'
     try:
         res = requests.post(url, headers=head)
+        print(res.json())
         xuehao = res.json()['data'][0]['val']
         xueyuan = res.json()['data'][1]['val']
         zhuanye = res.json()['data'][2]['val']
