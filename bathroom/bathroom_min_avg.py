@@ -4,13 +4,15 @@ import pymysql
 
 def time_window_iter(iter):
     window = []
+    # 阈值时间
+    threshold = 3600
     for x in iter:
         # print(x)
         window.append(x)
-        while window and (x['datetime'] - window[0]['datetime']).total_seconds()>3600:
+        while window and (x['datetime'] - window[0]['datetime']).total_seconds()>threshold:
             window.pop(0)
         # 如果窗口中的数据大于等于31条，就返回
-        if len(window) >= 61:
+        if len(window) >= threshold/60+1:
             yield window
 
 
@@ -29,8 +31,8 @@ def creatConnect():
 
 def query(cursor):
 
-    sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE (NOW());"
-    # sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY));"
+    #sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE (NOW());"
+    sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY));"
 
     cursor.execute(sql)
     results = []
