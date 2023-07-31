@@ -31,7 +31,7 @@ def creatConnect():
 
 def query(cursor):
 
-    #sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE (NOW());"
+    # sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE (NOW());"
     sql = f"SELECT id, free, total, name,  datetime FROM bathroom_people WHERE name = '华科中区男浴室' AND DATE(datetime) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY));"
 
     cursor.execute(sql)

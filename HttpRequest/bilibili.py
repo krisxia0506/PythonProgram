@@ -44,8 +44,9 @@ def handel_data(file, start=1, end=-1):
 def main():
     while True:
         # bv = input("请输入视频BV号: ")
-        bv = "BV1Ya411S7aT" # ssm
+        # bv = "BV1Ya411S7aT"  # ssm
         # bv = "BV1tL411c7gi"  # 软考
+        bv = "BV19K4y1L7MT"  # springboot2
         while True:
             try:
                 start = int(input("输入视频起始集: "))
@@ -67,15 +68,6 @@ def main():
                 handel_data(file_name, start, int(end))
         except Exception as e:
             print("解析出错", e)
-        while True:
-            isContinue = input("是否继续？(y/n): ").lower()
-            if isContinue not in ['y', 'n']:
-                print("请输入正确选项(y/n)")
-                continue
-            if isContinue == 'n':
-                print("Bye~")
-                return
-            break
 
 
 if __name__ == "__main__":
