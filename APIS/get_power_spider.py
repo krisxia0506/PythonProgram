@@ -71,13 +71,41 @@ def getBuildIDAndRoomID():
         yield item
 
 
+# 获取日期为今天的最后一条记录
+def get_last_record():
+    db, cursor = creat_connect()
+    sql = "SELECT * FROM powertable WHERE date(`date`) = CURDATE() - INTERVAL 1 DAY ORDER BY `id` DESC LIMIT 1;"
+    try:
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        # 如果没有结果，表示还没开始爬取，返回1,101
+        if len(results) == 0:
+            return 1, 101
+        else:
+            return results[0][1], results[0][2]
+    except Exception as e:
+        print("获取最后一条记录出现异常，异常信息如下\n", e)
+        return 1, 101
+    finally:
+        close_connect(db, cursor)
+
+
+# 断点续爬
 def xxx(id_gen):
+    print("断点续爬判断")
     last_rec = get_last_record()
-    for x in id_gen:
-        if x == last_rec:
-            break
-    for x in id_gen:
-        yield x
+    #
+    if last_rec == (1, 101):
+        print("没有数据，从头开始爬取")
+        for x in id_gen:
+            yield x
+    else:
+        print("有数据，从上次爬取的地方开始爬取，最后一条数据是{}".format(last_rec))
+        for x in id_gen:
+            if x == last_rec:
+                break
+        for x in id_gen:
+            yield x
 
 
 # 获取电量
@@ -172,24 +200,6 @@ def insert(buildingID, roomID, power_data, db, cursor):
     db.commit()
 
 
-# 获取日期为今天的最后一条记录
-def get_last_record():
-    db, cursor = creat_connect()
-    sql = "SELECT * FROM powertable WHERE date(`date`) = CURDATE() - INTERVAL 1 DAY ORDER BY `id` DESC LIMIT 1;"
-    try:
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        # 如果没有结果，返回1,101
-        if len(results) == 0:
-            return 1, 101
-        else:
-            return results[0][1], results[0][2]
-    except Exception as e:
-        print("获取最后一条记录出现异常，异常信息如下\n", e)
-        return 1, 101
-    finally:
-        close_connect(db, cursor)
-
 def main():
     # 获取数据库连接
     db, cursor = creat_connect()
@@ -198,31 +208,25 @@ def main():
     # 标志位，用于判断是否开始插入数据
     start_insert = False
     # 遍历getBuildIDAndRoomID()的结果
-    for item in getBuildIDAndRoomID():
-        # 如果遍历到了昨天最后一条记录的buildingID和roomID，就开始插入数据
-        if item[0] == last_buildingID and item[1] == last_roomID:
-            start_insert = True
-            continue
-        # 如果标志位为True，就开始插入数据
-        if start_insert:
+    for item in xxx(getBuildIDAndRoomID()):
+        try:
+            print("——————————————————————这是分隔符—————————————————————")
+            print("此次请求的楼号和房间号-->", item[0], item[1])  # 1 101
+            print("当前的session-->", session_value)
+            power_value = before_power(item[0], item[1], session_value)
+            if power_value != "其它情况":
+                print("\033[92m获取到电量值{}度，宿舍楼{}号楼{}\033[0m".format(power_value, item[0], item[1]))
+                # insert(item[0], item[1], power_value, db, cursor)
+            else:
+                print("获取电量值出现了其它情况")
+                continue
+        except Exception as e:
+            warnings.warn("妈的出问题了，赶紧检查一下", UserWarning)
+            print("异常信息如下\n", e)
+            pass
+        finally:
+            print("——————————————————————这是分隔符—————————————————————")
 
-            try:
-                print("——————————————————————这是分隔符—————————————————————")
-                print("此次请求的楼号和房间号-->", item[0], item[1])  # 1 101
-                print("当前的session-->", session_value)
-                power_value = before_power(item[0], item[1], session_value)
-                if power_value != "其它情况":
-                    print("\033[92m获取到电量值{}度，宿舍楼{}号楼{}\033[0m".format(power_value, item[0], item[1]))
-                    insert(item[0], item[1], power_value, db, cursor)
-                else:
-                    print("获取电量值出现了其它情况")
-                    continue
-            except Exception as e:
-                warnings.warn("妈的出问题了，赶紧检查一下", UserWarning)
-                print("异常信息如下\n", e)
-                pass
-            finally:
-                print("——————————————————————这是分隔符—————————————————————")
     # 关闭数据库连接
     close_connect(db, cursor)
     # 结束时间
