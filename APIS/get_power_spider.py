@@ -68,10 +68,10 @@ def getBuildIDAndRoomID():
     results = cursor.fetchall()
     close_connect(db, cursor)
     for item in results:
-        yield item
+        yield item  # (1,101)
 
 
-# 获取日期为今天的最后一条记录
+# 获取日期为昨天的最后一条记录，用于断点爬取
 def get_last_record():
     db, cursor = creat_connect()
     sql = "SELECT * FROM powertable WHERE date(`date`) = CURDATE() - INTERVAL 1 DAY ORDER BY `id` DESC LIMIT 1;"
@@ -80,40 +80,42 @@ def get_last_record():
         results = cursor.fetchall()
         # 如果没有结果，表示还没开始爬取，返回1,101
         if len(results) == 0:
-            return 1, 101
+            return None
         else:
             return results[0][1], results[0][2]
     except Exception as e:
         print("获取最后一条记录出现异常，异常信息如下\n", e)
-        return 1, 101
+        return None
     finally:
         close_connect(db, cursor)
 
 
-# 断点续爬
-def xxx(id_gen):
-    print("断点续爬判断")
+# 断点续爬,id_gen是所有宿舍号
+def continuously_climbing_at_breakpoints(id_gen):
+    print("判断是否需要断点续爬")
     last_rec = get_last_record()
-    #
-    if last_rec == (1, 101):
-        print("没有数据，从头开始爬取")
-        for x in id_gen:
-            yield x
-    else:
-        print("有数据，从上次爬取的地方开始爬取，最后一条数据是{}".format(last_rec))
+    # 如果get_last_record()返回了none，说明没有昨天的数据，需要从头爬取
+    if last_rec:
+        print("需要断点续爬，最后一条数据是{}".format(last_rec))
         for x in id_gen:
             if x == last_rec:
                 break
         for x in id_gen:
             yield x
+    else:
+        print("不需要断点续爬，从头开始爬取")
+        for x in id_gen:
+            yield x
 
 
 # 获取电量
-def power(build, room, session):
+def get_power(build, room, session):
     # 睡眠随机时间，毫秒级
     time.sleep(random.uniform(2, 4))
+    # 10-635需要特殊处理
     if build == 10 and room == 636:
         room = 635
+    # 楼号转义
     building_id2post = {
         1: '1-9--10-',
         2: '1-10--11-',
@@ -146,7 +148,7 @@ def power(build, room, session):
         print("此次请求的响应内容为-->", r.text)
     except:
         print("请求失败，尝试重新请求")
-        power(build, room, session)
+        get_power(build, room, session)
     try:
         if r.text == 'RspBaseVO [code=ERROR, msg=系统繁忙，请稍后重试, subCode=null, subMsg=null]':
             return 'error', 'sessionError'
@@ -163,14 +165,14 @@ def power(build, room, session):
 # 对power方法做一个细节判断
 def before_power(build, room, session):
     global session_value
-    power_result = power(build, room, session)
+    power_result = get_power(build, room, session)
     print("power_result的返回值-->", power_result)
     if power_result[0] == "error":
         if power_result[1] == 'sessionError':
-            print("\033[91m session过期了，准备获取新session，并重新查询\033[0m")
+            print("\033[91msession过期了，准备获取新session，并重新查询\033[0m")
             session_value = getNewSession()
             print("获取到了新的session", session_value)
-            power_result = power(build, room, session_value)
+            power_result = get_power(build, room, session_value)
             return power_result[1]
     elif power_result[0] == 'success':
         return power_result[1]
@@ -203,12 +205,8 @@ def insert(buildingID, roomID, power_data, db, cursor):
 def main():
     # 获取数据库连接
     db, cursor = creat_connect()
-    # 获取昨天最后一条记录的buildingID和roomID
-    last_buildingID, last_roomID = get_last_record()
-    # 标志位，用于判断是否开始插入数据
-    start_insert = False
     # 遍历getBuildIDAndRoomID()的结果
-    for item in xxx(getBuildIDAndRoomID()):
+    for item in continuously_climbing_at_breakpoints(getBuildIDAndRoomID()):
         try:
             print("——————————————————————这是分隔符—————————————————————")
             print("此次请求的楼号和房间号-->", item[0], item[1])  # 1 101
