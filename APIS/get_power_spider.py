@@ -6,10 +6,10 @@
 总共耗时02时38分43秒
 总共耗时02时38分02秒
 总共耗时02时38分47秒
-version: 0.1计划
+version: 1.1
 created by: XiaJiayi
 created on: 2023/7/30
-modify on: 2023/7/30
+modify on: 2023/8/7
 """
 import random
 import time
