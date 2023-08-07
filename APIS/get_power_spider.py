@@ -1,7 +1,12 @@
 """
 此段代码用于爬取电力数据
 宿舍楼和房间号从数据库中获取
-version: 0.1
+总共耗时02时39分20秒
+总共耗时02时39分08秒
+总共耗时02时38分43秒
+总共耗时02时38分02秒
+总共耗时02时38分47秒
+version: 0.1计划
 created by: XiaJiayi
 created on: 2023/7/30
 modify on: 2023/7/30
@@ -18,6 +23,10 @@ session_value = 'null'
 start_time = time.time()
 # 结束时间
 end_time = ''
+
+proxies = {
+    # 'http': 'http://114.232.109.207:8888'
+}
 
 
 # 数据库连接
@@ -62,6 +71,15 @@ def getBuildIDAndRoomID():
         yield item
 
 
+def xxx(id_gen):
+    last_rec = get_last_record()
+    for x in id_gen:
+        if x == last_rec:
+            break
+    for x in id_gen:
+        yield x
+
+
 # 获取电量
 def power(build, room, session):
     # 睡眠随机时间，毫秒级
@@ -96,7 +114,7 @@ def power(build, room, session):
         "Cookie": f'SESSION={session}; SERVERID=e8e02aa88506006460462b373a5d91a9|1653700198|1653700055'
     }
     try:
-        r = requests.post(url, headers=header)
+        r = requests.post(url, headers=header, proxies=proxies)
         print("此次请求的响应内容为-->", r.text)
     except:
         print("请求失败，尝试重新请求")
@@ -132,7 +150,7 @@ def before_power(build, room, session):
         return "其它情况"
 
 
-# 插入数据
+# 插入数据 2023-08-2 23:59:00
 def insert(buildingID, roomID, power_data, db, cursor):
     sql = f"INSERT INTO powertable (buildingID,roomID,power,date) VALUES ({buildingID},{roomID},{power_data},date_sub(CURDATE(),interval 1 minute ))"
     # 尝试插入3次
@@ -154,28 +172,57 @@ def insert(buildingID, roomID, power_data, db, cursor):
     db.commit()
 
 
-if __name__ == '__main__':
+# 获取日期为今天的最后一条记录
+def get_last_record():
+    db, cursor = creat_connect()
+    sql = "SELECT * FROM powertable WHERE date(`date`) = CURDATE() - INTERVAL 1 DAY ORDER BY `id` DESC LIMIT 1;"
+    try:
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        # 如果没有结果，返回1,101
+        if len(results) == 0:
+            return 1, 101
+        else:
+            return results[0][1], results[0][2]
+    except Exception as e:
+        print("获取最后一条记录出现异常，异常信息如下\n", e)
+        return 1, 101
+    finally:
+        close_connect(db, cursor)
+
+def main():
     # 获取数据库连接
     db, cursor = creat_connect()
+    # 获取昨天最后一条记录的buildingID和roomID
+    last_buildingID, last_roomID = get_last_record()
+    # 标志位，用于判断是否开始插入数据
+    start_insert = False
     # 遍历getBuildIDAndRoomID()的结果
     for item in getBuildIDAndRoomID():
-        try:
-            print("——————————————————————这是分隔符—————————————————————")
-            print("此次请求的楼号和房间号-->", item[0], item[1])  # 1 101
-            print("当前的session-->", session_value)
-            power_value = before_power(item[0], item[1], session_value)
-            if power_value != "其它情况":
-                print("\033[92m获取到电量值{}度，宿舍楼{}号楼{}\033[0m".format(power_value, item[0], item[1]))
-                insert(item[0], item[1], power_value, db, cursor)
-            else:
-                print("获取电量值出现了其它情况")
-                continue
-        except Exception as e:
-            warnings.warn("妈的出问题了，赶紧检查一下", UserWarning)
-            print("异常信息如下\n", e)
-            pass
-        finally:
-            print("——————————————————————这是分隔符—————————————————————")
+        # 如果遍历到了昨天最后一条记录的buildingID和roomID，就开始插入数据
+        if item[0] == last_buildingID and item[1] == last_roomID:
+            start_insert = True
+            continue
+        # 如果标志位为True，就开始插入数据
+        if start_insert:
+
+            try:
+                print("——————————————————————这是分隔符—————————————————————")
+                print("此次请求的楼号和房间号-->", item[0], item[1])  # 1 101
+                print("当前的session-->", session_value)
+                power_value = before_power(item[0], item[1], session_value)
+                if power_value != "其它情况":
+                    print("\033[92m获取到电量值{}度，宿舍楼{}号楼{}\033[0m".format(power_value, item[0], item[1]))
+                    insert(item[0], item[1], power_value, db, cursor)
+                else:
+                    print("获取电量值出现了其它情况")
+                    continue
+            except Exception as e:
+                warnings.warn("妈的出问题了，赶紧检查一下", UserWarning)
+                print("异常信息如下\n", e)
+                pass
+            finally:
+                print("——————————————————————这是分隔符—————————————————————")
     # 关闭数据库连接
     close_connect(db, cursor)
     # 结束时间
@@ -186,3 +233,6 @@ if __name__ == '__main__':
     h, m = divmod(m, 60)
     print("总共耗时%02d时%02d分%02d秒" % (h, m, s))
 
+
+if __name__ == '__main__':
+    main()

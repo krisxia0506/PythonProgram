@@ -1,16 +1,35 @@
 # 完整版
+import random
+import time
+
 import pymysql
 import requests
 
+# 在数据库获取token
+def getToken():
+    db,cursor = creatConnect()
+    # sql语句
+    sql = "SELECT token FROM token WHERE id = 1"
+    # 执行sql语句
+    cursor.execute(sql)
+    # 获取查询结果
+    results = cursor.fetchall()
+    # 关闭数据库连接
+    closeConnect(db, cursor)
+    # 返回token
+    return results[0][0]
+
 
 def getNewSession():
-    url2 = 'http://h5cloud.17wanxiao.com:8080/CloudPayment/user/pay.do?versioncode=10556102&systemType=IOS&UAinfo=wanxiao&token=5c64d886-efb9-43ab-81f8-037276978059&customerId=104'
+    url2 = 'http://h5cloud.17wanxiao.com:8080/CloudPayment/user/pay.do?versioncode=10556102&systemType=IOS&UAinfo=wanxiao&token='+getToken()+'&customerId=104'
     res = requests.get(url2, allow_redirects=False)
     session = res.cookies.get("SESSION")
     return session
 
 
 def power(build, room, newsession):
+    # 睡眠随机时间 2023-07-29 19:05:47
+    time.sleep(random.randint(2, 5))
     if build == 10 and room == 636:
         room = 635
     building_id2post = {
@@ -40,9 +59,12 @@ def power(build, room, newsession):
         ,
         "Cookie": f'SESSION={newsession}; SERVERID=e8e02aa88506006460462b373a5d91a9|1653700198|1653700055'
     }
-
-    r = requests.post(url, headers=header)
-    print(r.text)
+    try:
+        r = requests.post(url, headers=header)
+        print(r.text)
+    except:
+        print("请求失败，尝试重新请求")
+        power(build, room, newsession)
     try:
         if r.text == 'RspBaseVO [code=ERROR, msg=系统繁忙，请稍后重试, subCode=null, subMsg=null]':
             return 'sessionError'
@@ -52,19 +74,28 @@ def power(build, room, newsession):
             return 'noRoom'
         else:
             return 'otherError'
+
     except:
         return 'otherError'
 
 
 def creatConnect():
-    db = pymysql.connect(host='101.200.229.85', user='root', password='1c0K@U*Y1E3-n', charset='utf8', db='ACEQIS')
+    db = pymysql.connect(host='58.87.95.28', user='APIS', password='CmaPzyaGAetzezyY', charset='utf8', db='apis')
     cursor = db.cursor()
     return db, cursor
 
 
 def insert(buildID, roomID, power, db, cursor):
-    sql = f"INSERT INTO PowerTable (buildID,roomID,power,date) VALUES ({buildID},{roomID},{power},date_sub(CURDATE()-1,interval 1 minute ))"
-    cursor.execute(sql)
+    sql = f"INSERT INTO powertable (buildingID,roomID,power,date) VALUES ({buildID},{roomID},{power},date_sub(CURDATE(),interval 1 minute ))"
+    # 尝试插入两次
+    i=0
+    while i < 3:
+        try:
+            cursor.execute(sql)
+            break
+        except:
+            print("插入失败,尝试重新插入")
+            i = i + 1
     db.commit()
 
 
@@ -82,12 +113,16 @@ def quey(roomID, session2):
     elif flag == 'noRoom':
         return flag
     else:
+        print("数据准备插入")
         print(building, room, flag)
         insert(building, room, flag, db, cursor)
         return 1
 
 
 if __name__ == '__main__':
+    # 打印当前时间
+    start_in_time = time.localtime()
+    print("开始时间" + time.strftime("%Y-%m-%d %H:%M:%S", start_in_time))
     session1 = ""
     db, cursor = creatConnect()
 
@@ -104,8 +139,10 @@ if __name__ == '__main__':
                     a = i + j + start  # 1101
                     b = i + j + end  # 1120
                     for room in range(a, b + 1):
-                        while quey(room, session1) == "sessionError":
+                        s = quey(room, session1)
+                        while s == "sessionError":
                             session1 = getNewSession()
+                            s = quey(room, session1)
         else:
             start = 1
             end = 70
@@ -115,7 +152,11 @@ if __name__ == '__main__':
                 b = i + end
                 for room in range(a, b + 1):
                     print(session1)
-                    while quey(room, session1) == "sessionError":
+                    str_int = quey(room, session1)
+                    while str_int == "sessionError":
                         session1 = getNewSession()
+                        str_int = quey(room, session1)
 
     closeConnect(db, cursor)
+    # 打印当前时间
+    print("结束时间" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
