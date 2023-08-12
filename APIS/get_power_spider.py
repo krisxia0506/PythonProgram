@@ -96,12 +96,16 @@ def continuously_climbing_at_breakpoints(id_gen):
     last_rec = get_last_record()
     # 如果get_last_record()返回了none，说明没有昨天的数据，需要从头爬取
     if last_rec:
-        print("需要断点续爬，最后一条数据是{}".format(last_rec))
-        for x in id_gen:
-            if x == last_rec:
-                break
-        for x in id_gen:
-            yield x
+        if last_rec == (11, 668):
+            print("已经爬取到最后一条数据，不需要断点续爬")
+            return
+        else:
+            print("需要断点续爬，最后一条数据是{}".format(last_rec))
+            for x in id_gen:
+                if x == last_rec:
+                    break
+            for x in id_gen:
+                yield x
     else:
         print("不需要断点续爬，从头开始爬取")
         for x in id_gen:
@@ -174,6 +178,10 @@ def before_power(build, room, session):
             print("获取到了新的session", session_value)
             power_result = get_power(build, room, session_value)
             return power_result[1]
+        elif power_result[1] == 'otherError':
+            print("\033[91m其它错误，重新查询\033[0m")
+            power_result = get_power(build, room, session_value)
+            return power_result[1]
     elif power_result[0] == 'success':
         return power_result[1]
     else:
@@ -214,7 +222,7 @@ def main():
             power_value = before_power(item[0], item[1], session_value)
             if power_value != "其它情况":
                 print("\033[92m获取到电量值{}度，宿舍楼{}号楼{}\033[0m".format(power_value, item[0], item[1]))
-                # insert(item[0], item[1], power_value, db, cursor)
+                insert(item[0], item[1], power_value, db, cursor)
             else:
                 print("获取电量值出现了其它情况")
                 continue
